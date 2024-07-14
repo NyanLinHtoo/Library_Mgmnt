@@ -127,6 +127,7 @@ const UserDrawer = () => {
     try {
       await borrowBook(bookId);
       fetchBooks();
+      toast.success(`You have successfully borrowed.`);
     } catch (err) {
       toast.error(err.response.data.message);
     } finally {

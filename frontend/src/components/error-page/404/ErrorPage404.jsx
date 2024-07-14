@@ -1,40 +1,43 @@
-import { useNavigate } from "react-router";
-import "./errstyle.css";
-import { Button } from "@mui/material";
+import { Typography, Button, Container } from "@mui/material";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const ErrorPage404 = ({ errStatus = 404 }) => {
-  const navigate = useNavigate();
-
-  const errorPageHandler = () => {
-    navigate("/login");
-  };
-
+function ErrorPage404({
+  title = "404",
+  subtitle = "Oops! Page not found",
+  description = "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+  imageUrl = "../../../../images/error-page/error404.png",
+  imageAlt = "404 Error",
+}) {
   return (
-    <div className="error-container">
-      <img src={`/images/error-page/error${errStatus}.png`} alt="Error" />
-      <div className="text">
-        {/* Make changes here when more error status codes are added */}
-        <h1>
-          {errStatus === 404
-            ? "Ooops!...Page Not Found"
-            : "Hey!... No Authorization Found"}
-        </h1>
-
-        <Button type="primary" onClick={errorPageHandler}>
-          Go To Login
-        </Button>
-      </div>
-    </div>
+    <Container maxWidth="sm" style={{ textAlign: "center", marginTop: "50px" }}>
+      <img
+        src={imageUrl}
+        alt={imageAlt}
+        style={{ maxWidth: "100%", height: "auto" }}
+      />
+      <Typography variant="h3" gutterBottom>
+        {title}
+      </Typography>
+      <Typography variant="h5" gutterBottom>
+        {subtitle}
+      </Typography>
+      <Typography variant="body1" paragraph>
+        {description}
+      </Typography>
+      <Button component={Link} to="/" variant="contained" color="primary">
+        Go to Login
+      </Button>
+    </Container>
   );
-};
+}
 
 ErrorPage404.propTypes = {
-  errStatus: PropTypes.number,
-};
-
-ErrorPage404.defaultProps = {
-  errStatus: 404,
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  description: PropTypes.string,
+  imageUrl: PropTypes.string,
+  imageAlt: PropTypes.string,
 };
 
 export default ErrorPage404;

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { addBook } from "../../services/api";
 import PropTypes from "prop-types";
+import { toast } from "sonner";
 
 function AddBook({ onBookAdded }) {
   const [title, setTitle] = useState("");
@@ -17,13 +18,18 @@ function AddBook({ onBookAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!title.trim() || !category) {
+      toast.error("Please fill in both title and category");
+      return;
+    }
     try {
       await addBook({ title, category });
       setTitle("");
       setCategory("");
       onBookAdded();
+      toast.success("Book added successfully");
     } catch (error) {
-      console.error("Failed to add book", error);
+      console.log("Failed to add book", error);
     }
   };
 
@@ -52,15 +58,14 @@ function AddBook({ onBookAdded }) {
         fullWidth
         margin="normal"
       />
-      <FormControl fullWidth margin="normal">
-        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+      <FormControl fullWidth sx={{ mt: 2, mb: 1 }}>
+        <InputLabel id="category-select-label">Category</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="category-select-label"
+          id="category-select"
           label="Category"
           value={category}
-          onChange={handleChange}
-          margin="normal">
+          onChange={handleChange}>
           {menuItem.map((item) => (
             <MenuItem value={item} key={item}>
               {item}
@@ -68,7 +73,11 @@ function AddBook({ onBookAdded }) {
           ))}
         </Select>
       </FormControl>
-      <Button type="submit" variant="contained" color="primary" sx={{ mb: 3 }}>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mb: 3 }}>
         Add Book
       </Button>
     </form>

@@ -100,7 +100,7 @@ const LibrarianDrawer = () => {
   const [users, setUsers] = useState([]);
   const [isBorrowing, setIsBorrowing] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const [activeSection, setActiveSection] = useState("Users");
+  const [activeSection, setActiveSection] = useState("Books");
   const theme = useTheme();
   const navigate = useNavigate();
 

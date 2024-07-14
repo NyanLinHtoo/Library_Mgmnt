@@ -11,6 +11,7 @@ import {
   TablePagination,
   Typography,
   CircularProgress,
+  Chip,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -18,6 +19,7 @@ function BookList({ books, onBorrow, userRole, isBorrowing }) {
   const columns = [
     { id: "title", label: "Title", minWidth: 200 },
     { id: "category", label: "Category", minWidth: 100 },
+    { id: "isBorrowed", label: "Status", minWidth: 100 },
     ...(userRole === "User"
       ? [{ id: "borrow", label: "Borrow", minWidth: 170, align: "center" }]
       : []),
@@ -58,6 +60,7 @@ function BookList({ books, onBorrow, userRole, isBorrowing }) {
             {books
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((book) => {
+                console.log("book===>", book);
                 return (
                   <TableRow
                     hover
@@ -65,13 +68,17 @@ function BookList({ books, onBorrow, userRole, isBorrowing }) {
                     tabIndex={-1}
                     key={book.title}>
                     {columns.map((column) => {
+                      console.log("column===>", column);
                       const value = book[column.id];
+                      console.log("Value ==> ", value);
                       if (column.id === "borrow" && userRole === "User") {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {!book.isBorrowed && (
                               <Button
-                                onClick={() => onBorrow(book._id)}
+                                onClick={() => {
+                                  onBorrow(book._id);
+                                }}
                                 disabled={isBorrowing}>
                                 {isBorrowing ? (
                                   <CircularProgress size={24} />
@@ -79,6 +86,25 @@ function BookList({ books, onBorrow, userRole, isBorrowing }) {
                                   "Borrow"
                                 )}
                               </Button>
+                            )}
+                          </TableCell>
+                        );
+                      }
+                      if (column.id === "isBorrowed") {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {value ? (
+                              <Chip
+                                color="error"
+                                label="Borrowed"
+                                size="small"
+                              />
+                            ) : (
+                              <Chip
+                                color="success"
+                                label="Available"
+                                size="small"
+                              />
                             )}
                           </TableCell>
                         );

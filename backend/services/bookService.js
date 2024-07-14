@@ -14,7 +14,7 @@ const addBookService = async (req, res) => {
 
 const getAllBooksService = async (req, res) => {
   try {
-    const books = await Book.find();
+    const books = await Book.find().sort({ $natural: -1 });
     res.json(books);
   } catch (error) {
     res.status(500).send("Server error");

@@ -9,6 +9,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -33,6 +34,7 @@ function Login() {
       setEmailError("Please enter a valid email address");
       return;
     }
+    setIsLoading(true);
     try {
       const userData = await login(email, password);
       setUser(userData);
@@ -44,6 +46,8 @@ function Login() {
       toast.success("Login successful");
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,6 +83,7 @@ function Login() {
           variant="contained"
           color="primary"
           fullWidth
+          disabled={isLoading}
           sx={{ mt: 3 }}>
           Login
         </Button>

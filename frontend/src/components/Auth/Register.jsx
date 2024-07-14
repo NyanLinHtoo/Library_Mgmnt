@@ -8,6 +8,7 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -32,11 +33,15 @@ function Register() {
       setEmailError("Please enter a valid email address");
       return;
     }
+    setIsLoading(true);
     try {
       await register(email, password);
       navigate("/");
+      toast.success("Register successful");
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,6 +77,7 @@ function Register() {
           variant="contained"
           color="primary"
           fullWidth
+          disabled={isLoading}
           sx={{ mt: 3 }}>
           {" "}
           Register

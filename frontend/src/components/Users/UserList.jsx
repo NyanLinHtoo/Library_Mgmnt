@@ -1,93 +1,42 @@
 import PropTypes from "prop-types";
-import {
-  Paper,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TablePagination,
-  Typography,
-} from "@mui/material";
+import { Typography, Grid, Box, Pagination } from "@mui/material";
 import { useState } from "react";
+import UserCard from "./UserCard";
 
 const UserList = ({ users }) => {
-  const columns = [
-    { id: "email", label: "Email", minWidth: 200 },
-    {
-      id: "borrowedBooks",
-      label: "Books",
-      minWidth: 100,
-      format: (value) => value.length,
-    },
-    {
-      id: "borrowedBooks",
-      label: "Borrowed Books",
-      minWidth: 100,
-      format: (value) => value.map((book) => book.title).join(", "),
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const usersPerPage = 6;
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangePage = (event, value) => {
+    setPage(value);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const displayedUsers = users.slice(
+    (page - 1) * usersPerPage,
+    page * usersPerPage
+  );
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <Typography variant="h6" sx={{ p: 2 }}>
+    <Box>
+      <Typography variant="h4" sx={{ mb: 3 }}>
         Users List
       </Typography>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((user) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={user._id}>
-                  {columns.map((column) => {
-                    const value = user[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={users.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+      <Grid container spacing={3}>
+        {displayedUsers.map((user) => (
+          <Grid item xs={12} sm={6} md={4} key={user._id}>
+            <UserCard user={user} />
+          </Grid>
+        ))}
+      </Grid>
+      <Box display="flex" justifyContent="center" mt={4}>
+        <Pagination
+          count={Math.ceil(users.length / usersPerPage)}
+          page={page}
+          onChange={handleChangePage}
+          color="primary"
+        />
+      </Box>
+    </Box>
   );
 };
 

@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import PropTypes from "prop-types";
 
-const PrivateRoute = ({ allowedRoles }) => {
+const PrivateRoute = ({ allowedRoles = null }) => {
   const { user } = useAuth();
 
   if (!user) {
@@ -18,10 +18,6 @@ const PrivateRoute = ({ allowedRoles }) => {
 
 PrivateRoute.propTypes = {
   allowedRoles: PropTypes.arrayOf(PropTypes.string),
-};
-
-PrivateRoute.defaultProps = {
-  allowedRoles: null,
 };
 
 export default PrivateRoute;
