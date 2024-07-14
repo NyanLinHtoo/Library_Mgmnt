@@ -8,11 +8,31 @@ import { toast } from "sonner";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    if (newEmail && !validateEmail(newEmail)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
     try {
       const userData = await login(email, password);
       setUser(userData);
@@ -39,8 +59,11 @@ function Login() {
           fullWidth
           label="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
+          error={!!emailError}
+          helperText={emailError}
           margin="normal"
+          required
         />
         <TextField
           fullWidth
@@ -49,6 +72,7 @@ function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           margin="normal"
+          required
         />
         <Button
           type="submit"

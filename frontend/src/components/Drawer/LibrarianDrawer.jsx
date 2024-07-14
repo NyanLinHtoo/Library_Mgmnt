@@ -98,14 +98,15 @@ const Drawer = styled(MuiDrawer, {
 const LibrarianDrawer = () => {
   const [books, setBooks] = useState([]);
   const [users, setUsers] = useState([]);
-  const theme = useTheme();
+  const [isBorrowing, setIsBorrowing] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [activeSection, setActiveSection] = useState("Users");
+  const theme = useTheme();
   const navigate = useNavigate();
+
   const userString = localStorage.getItem("user");
   const user = JSON.parse(userString);
   const currentUserRole = user ? user.role : null;
-  console.log(currentUserRole);
 
   useEffect(() => {
     fetchBooks();
@@ -131,11 +132,14 @@ const LibrarianDrawer = () => {
   };
 
   const handleBorrow = async (bookId) => {
+    setIsBorrowing(true);
     try {
       await borrowBook(bookId);
       fetchBooks();
     } catch (err) {
       toast.error(err.response.data.message);
+    } finally {
+      setIsBorrowing(false);
     }
   };
 
@@ -227,6 +231,7 @@ const LibrarianDrawer = () => {
               books={books}
               onBorrow={handleBorrow}
               userRole={currentUserRole}
+              isBorrowing={isBorrowing}
             />
           </>
         )}

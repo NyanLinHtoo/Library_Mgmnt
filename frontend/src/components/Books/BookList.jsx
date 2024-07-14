@@ -10,10 +10,11 @@ import {
   TableBody,
   TablePagination,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useState } from "react";
 
-function BookList({ books, onBorrow, userRole }) {
+function BookList({ books, onBorrow, userRole, isBorrowing }) {
   const columns = [
     { id: "title", label: "Title", minWidth: 200 },
     { id: "category", label: "Category", minWidth: 100 },
@@ -69,8 +70,14 @@ function BookList({ books, onBorrow, userRole }) {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {!book.isBorrowed && (
-                              <Button onClick={() => onBorrow(book._id)}>
-                                Borrow
+                              <Button
+                                onClick={() => onBorrow(book._id)}
+                                disabled={isBorrowing}>
+                                {isBorrowing ? (
+                                  <CircularProgress size={24} />
+                                ) : (
+                                  "Borrow"
+                                )}
                               </Button>
                             )}
                           </TableCell>
@@ -114,6 +121,7 @@ BookList.propTypes = {
   ).isRequired,
   onBorrow: PropTypes.func,
   userRole: PropTypes.string.isRequired,
+  isBorrowing: PropTypes.bool.isRequired,
 };
 
 export default BookList;

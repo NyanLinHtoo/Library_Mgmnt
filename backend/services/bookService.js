@@ -34,7 +34,9 @@ const borrowBookService = async (req, res) => {
     console.log(book);
     if (!book || book.isBorrowed) {
       console.log("I am herer");
-      return res.status(400).json({ message: "Book not isBorrowed" });
+      return res
+        .status(400)
+        .json({ message: "Book is borrowed by other user" });
     }
 
     book.isBorrowed = true;
