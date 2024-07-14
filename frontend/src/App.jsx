@@ -12,10 +12,8 @@ function App() {
     <AuthProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router>
-          <Toaster position="top-center" richColors />
-          <AppRouter />
-        </Router>
+        <Toaster position="top-center" richColors />
+        <AppRouter />
       </ThemeProvider>
     </AuthProvider>
   );
